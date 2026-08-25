@@ -86,21 +86,23 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionLogin(): Response|string
+    public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
-        $model = new LoginForm($this->security);
-
-        if ($model->load($this->request->post()) && $model->login()) {
-            return $this->goBack();
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            // Ellenőrizd RBAC role-t
+            $user = Yii::$app->user->identity;
+            $roles = $user->getRoles();
+            
+            return $this->goHome();
         }
-
         $model->password = '';
-
-        return $this->render('login', ['model' => $model]);
+        return $this->render('login', [
+            'model' => $model,
+        ]);
     }
 
     /**
