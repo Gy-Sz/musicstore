@@ -91,7 +91,7 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        $model = new LoginForm();
+        $model = new LoginForm($this->security);
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             // Ellenőrizd RBAC role-t
             $user = Yii::$app->user->identity;
