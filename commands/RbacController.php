@@ -5,6 +5,7 @@ use Yii;
 use yii\console\Controller;
 use yii\console\ExitCode;
 use yii\rbac\DbManager;
+use app\models\User;
 
 class RbacController extends Controller
 {
