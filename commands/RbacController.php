@@ -31,5 +31,26 @@ class RbacController extends Controller
 
         return ExitCode::OK;
     }
+
+    public function actionAssign($roleName, $username)
+    {
+        $auth = Yii::$app->authManager;
+        $user = User::find()->where(['username' => $username])->one();
+        
+        if (!$user) {
+            $this->stdout("User not found: $username\n");
+            return ExitCode::ERROR;
+        }
+        
+        $role = $auth->getRole($roleName);
+        if (!$role) {
+            $this->stdout("Role not found: $roleName\n");
+            return ExitCode::ERROR;
+        }
+        
+        $auth->assign($role, $user->id);
+        $this->stdout("Role '$roleName' assigned to user '$username'\n");
+        return ExitCode::OK;
+    }
 }
 ?>
