@@ -12,4 +12,6 @@ class HashController extends Controller
         $this->stdout("Password hash: " . $hash . "\n");
     }
 }
+// php yii hash/password ""
+
 ?>
