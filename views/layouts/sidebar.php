@@ -36,7 +36,7 @@
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
 
-                    ['label' => 'Products', 'icon' => 'th', 'url' => ['product/index']],
+                    ['label' => 'Artists', 'icon' => 'th', 'url' => ['artist/index']],
                     
                     ['label'=>'DevTools', 'header'=>true],
                     ['label'=>'gii', 'icon'=>'file-code', 'url'=>['/gii'], 'target'=>'_blank'],
