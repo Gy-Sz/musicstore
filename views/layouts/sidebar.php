@@ -35,10 +35,8 @@
             <?php
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
-                    ['label' => 'Producttypes', 'icon' => 'th', 'url' => ['producttype/index']],
-                    ['label' => 'Brands', 'icon' => 'th', 'url' => ['brand/index']],
+
                     ['label' => 'Products', 'icon' => 'th', 'url' => ['product/index']],
-                    ['label' => 'Tax', 'icon' => 'th', 'url' => ['tax/index']],
                     
                     ['label'=>'DevTools', 'header'=>true],
                     ['label'=>'gii', 'icon'=>'file-code', 'url'=>['/gii'], 'target'=>'_blank'],
