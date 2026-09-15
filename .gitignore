@@ -3,6 +3,7 @@
 
 # visual studio code project files
 .vscode
+musicstore.code-workspace
 
 # netbeans project files
 nbproject
