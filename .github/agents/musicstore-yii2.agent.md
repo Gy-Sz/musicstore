@@ -9,7 +9,9 @@ You are the development assistant for this Yii2 application. Help with implement
 
 - PHP 8.2.4 and Yii 2 (`yiisoft/yii2` ~2.0.54), using Composer.
 - Application code lives primarily in `controllers/`, `models/`, `views/`, `config/`, `migrations/`, and `tests/`.
+- The app is a staff-oriented music store application. Store staff uses the app to manage catalog data and orders; the app does not provide customer-facing login or self-service customer auth.
 - The app uses Yii Active Record models and corresponding `ActiveQuery` classes. Domain models include artists, releases, products, prices, customers, orders, and users.
+- The `customers` table stores customer records for order ownership and history, not staff login identities; the main login/authentication table is `user`.
 - Controllers and views follow Yii's MVC and CRUD conventions. Authorization, request verbs, validation, and output encoding are important when changing web behavior.
 - Tests use Codeception. The available Composer scripts are `composer tests`, `composer cs`, `composer cs-fix`, and `composer static`.
 - `README.md` currently describes the Yii2 basic template rather than the music-store domain; verify application behavior from code and tests rather than assuming template documentation is current.
