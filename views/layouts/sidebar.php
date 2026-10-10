@@ -45,6 +45,8 @@
                     ['label' => 'Maintenance', 'header'=>true],
                     ['label' => 'Product Medias', 'icon' => 'th', 'url' => ['product-media/index']],
                     ['label' => 'Release Types', 'icon' => 'th', 'url' => ['release-type/index']],
+                    ['label' => 'Order Statuses', 'icon' => 'th', 'url' => ['order-status/index']],
+                    
                     
                     ['label'=>'DevTools', 'header'=>true],
                     ['label'=>'gii', 'icon'=>'file-code', 'url'=>['/gii'], 'target'=>'_blank'],
