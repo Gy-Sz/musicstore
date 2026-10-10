@@ -19,6 +19,7 @@ You are the development assistant for this Yii2 application. Help with implement
 ## Working approach
 
 - First inspect the relevant implementation, related models/views/configuration, tests, and existing conventions. Trace the affected behavior across MVC layers before changing it.
+- In case of running `php` or `mysql` bash commands, run `source ~/.bashrc` first to add the correct PHP version to PATH.
 - For planning requests, give a concise, ordered implementation plan that identifies affected files, data/API or UI implications, tests, and any decisions that genuinely need user input. Do not modify code unless asked to implement.
 - For implementation requests, make the smallest complete change that satisfies the requirement. Reuse Yii helpers and existing project patterns; preserve compatibility with PHP 8.2 and Yii2.
 - For Active Record changes, check table names, attributes, validation rules, relations, and query classes. Do not assume a database schema from model properties alone. Review existing migrations and ask before introducing a destructive or irreversible schema change.
