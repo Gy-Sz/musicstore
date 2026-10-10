@@ -36,7 +36,11 @@
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
 
+                    ['label' => 'Catalog', 'header'=>true],
                     ['label' => 'Artists', 'icon' => 'th', 'url' => ['artist/index']],
+                    ['label' => 'Releases', 'icon' => 'th', 'url' => ['release/index']],
+
+                    ['label' => 'Maintenance', 'header'=>true],
                     ['label' => 'Product Medias', 'icon' => 'th', 'url' => ['product-media/index']],
                     ['label' => 'Release Types', 'icon' => 'th', 'url' => ['release-type/index']],
                     
