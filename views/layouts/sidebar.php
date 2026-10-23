@@ -39,8 +39,8 @@
                     ['label' => 'Products', 'icon' => 'th', 'url' => ['product/index']],
 
                     ['label' => 'Catalog', 'header'=>true],
-                    ['label' => 'Artists', 'icon' => 'th', 'url' => ['artist/index']],
-                    ['label' => 'Releases', 'icon' => 'th', 'url' => ['release/index']],
+                    ['label' => 'Artists', 'icon' => 'microphone', 'url' => ['artist/index']],
+                    ['label' => 'Releases', 'icon' => 'music', 'url' => ['release/index']],
 
                     ['label' => 'Maintenance', 'header'=>true],
                     ['label' => 'Product Medias', 'icon' => 'th', 'url' => ['product-media/index']],

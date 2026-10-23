@@ -2,8 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\Artist;
 use app\models\Release;
+use app\models\ReleaseType;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -39,7 +42,7 @@ class ReleaseController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Release::find(),
+            'query' => Release::find()->with(['artists', 'releaseTypes']),
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -89,6 +92,8 @@ class ReleaseController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'artists' => $this->getArtistOptions(),
+            'releaseTypes' => $this->getReleaseTypeOptions(),
         ]);
     }
 
@@ -109,6 +114,8 @@ class ReleaseController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'artists' => $this->getArtistOptions(),
+            'releaseTypes' => $this->getReleaseTypeOptions(),
         ]);
     }
 
@@ -140,5 +147,23 @@ class ReleaseController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    private function getArtistOptions(): array
+    {
+        return ArrayHelper::map(
+            Artist::find()->orderBy(['name' => SORT_ASC])->all(),
+            'id',
+            'name'
+        );
+    }
+
+    private function getReleaseTypeOptions(): array
+    {
+        return ArrayHelper::map(
+            ReleaseType::find()->orderBy(['name' => SORT_ASC])->all(),
+            'id',
+            'name'
+        );
     }
 }

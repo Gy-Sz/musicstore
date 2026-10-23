@@ -31,9 +31,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'title',
-            'artistid',
+            [
+                'label' => Yii::t('app', 'Artist'),
+                'value' => $model->artists->name,
+            ],
             'date',
-            'typeid',
+            [
+                'label' => Yii::t('app', 'Type'),
+                'value' => $model->releaseTypes->name,
+            ],
             'genre',
         ],
     ]) ?>
