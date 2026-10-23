@@ -22,7 +22,7 @@ $this->registerJs("$('#release-date-picker').datetimepicker({format: 'YYYY-MM-DD
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'artistid')->dropDownList($artists, [
+    <?= $form->field($model, 'artistid', ['labelOptions' => ['label' => Yii::t('app', 'Artist')]])->dropDownList($artists, [
         'prompt' => Yii::t('app', 'Select an artist'),
         'class' => 'form-control select2',
     ]) ?>
