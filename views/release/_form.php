@@ -2,10 +2,14 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\assets\TempusDominusAsset;
 
 /** @var yii\web\View $this */
 /** @var app\models\Release $model */
 /** @var yii\widgets\ActiveForm $form */
+
+TempusDominusAsset::register($this);
+$this->registerJs("$('#release-date-picker').datetimepicker({format: 'YYYY-MM-DD'});");
 ?>
 
 <div class="release-form">
@@ -16,7 +20,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'artistid')->textInput() ?>
 
-    <?= $form->field($model, 'date')->textInput() ?>
+    <?= $form->field($model, 'date', [
+        'template' => "{label}\n<div class=\"input-group date\" id=\"release-date-picker\" data-target-input=\"nearest\">{input}<div class=\"input-group-append\" data-target=\"#release-date-picker\" data-toggle=\"datetimepicker\"><div class=\"input-group-text\"><i class=\"fa fa-calendar\"></i></div></div></div>\n{error}\n{hint}",
+    ])->textInput([
+        'class' => 'form-control datetimepicker-input',
+        'data-target' => '#release-date-picker',
+    ]) ?>
 
     <?= $form->field($model, 'typeid')->textInput() ?>
 
