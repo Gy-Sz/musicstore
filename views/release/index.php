@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => Yii::t('app', 'Type'),
                 'value' => static fn (Release $model) => $model->releaseTypes->name,
             ],
-            //'genre',
+            'genre',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Release $model, $key, $index, $column) {
