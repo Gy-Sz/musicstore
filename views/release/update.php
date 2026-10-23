@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Release $model */
+/** @var array $artists */
 
 $this->title = Yii::t('app', 'Update Release: {name}', [
     'name' => $model->title,
@@ -18,6 +19,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
     <?= $this->render('_form', [
         'model' => $model,
+        'artists' => $artists,
     ]) ?>
 
 </div>
