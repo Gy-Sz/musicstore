@@ -8,6 +8,7 @@ use app\assets\TempusDominusAsset;
 /** @var yii\web\View $this */
 /** @var app\models\Release $model */
 /** @var array $artists */
+/** @var array $releaseTypes */
 /** @var yii\widgets\ActiveForm $form */
 
 Select2Asset::register($this);
@@ -34,7 +35,7 @@ $this->registerJs("$('#release-date-picker').datetimepicker({format: 'YYYY-MM-DD
         'data-target' => '#release-date-picker',
     ]) ?>
 
-    <?= $form->field($model, 'typeid')->textInput() ?>
+    <?= $form->field($model, 'typeid', ['labelOptions' => ['label' => Yii::t('app', 'Type')]])->dropDownList($releaseTypes) ?>
 
     <?= $form->field($model, 'genre')->textInput(['maxlength' => true]) ?>
 
