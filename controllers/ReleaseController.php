@@ -42,7 +42,7 @@ class ReleaseController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Release::find(),
+            'query' => Release::find()->with(['artists', 'releaseTypes']),
             /*
             'pagination' => [
                 'pageSize' => 50

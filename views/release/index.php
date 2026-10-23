@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
@@ -29,15 +30,23 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'title',
-            'artistid',
+            [
+                'attribute' => 'artistid',
+                'label' => Yii::t('app', 'Artist'),
+                'value' => static fn (Release $model) => $model->artists->name,
+            ],
             'date',
-            'typeid',
+            [
+                'attribute' => 'typeid',
+                'label' => Yii::t('app', 'Type'),
+                'value' => static fn (Release $model) => $model->releaseTypes->name,
+            ],
             //'genre',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Release $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                }
             ],
         ],
     ]); ?>
