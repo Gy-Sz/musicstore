@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\models\Product;
+use app\models\Release;
+use app\models\ProductMedia;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -39,7 +41,7 @@ class ProductController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Product::find(),
+            'query' => Product::find()->with(['releases', 'productMedias']),
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -89,6 +91,8 @@ class ProductController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'releases' => $this->getReleaseOptions(),
+            'productMedias' => $this->getProductMediaOptions(),
         ]);
     }
 
@@ -109,6 +113,8 @@ class ProductController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'releases' => $this->getReleaseOptions(),
+            'productMedias' => $this->getProductMediaOptions(),
         ]);
     }
 
@@ -140,5 +146,23 @@ class ProductController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    private function getReleaseOptions(): array
+    {
+        return ArrayHelper::map(
+            Release::find()->orderBy(['title' => SORT_ASC])->all(),
+            'id',
+            'title'
+        );
+    }
+
+    private function getProductMediaOptions(): array
+    {
+        return ArrayHelper::map(
+            ProductMedia::find()->orderBy(['name' => SORT_ASC])->all(),
+            'id',
+            'name'
+        );
     }
 }
