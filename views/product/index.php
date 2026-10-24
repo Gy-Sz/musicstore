@@ -28,8 +28,16 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'releaseid',
-            'mediaid',
+            [
+                'attribute' => 'releaseid',
+                'label' => Yii::t('app', 'Release'),
+                'value' => static fn (Product $model) => $model->releases->title,
+            ],
+            [
+                'attribute' => 'mediaid',
+                'label' => Yii::t('app', 'Media'),
+                'value' => static fn (Product $model) => $model->productMedias->name,
+            ],
             'available_from_date',
             'stock',
             [

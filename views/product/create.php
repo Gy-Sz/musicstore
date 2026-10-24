@@ -4,6 +4,8 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Product $model */
+/** @var array $releases */
+/** @var array $productMedias */
 
 $this->title = Yii::t('app', 'Create Product');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Products'), 'url' => ['index']];
@@ -15,6 +17,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'releases' => $releases,
+        'productMedias' => $productMedias,
     ]) ?>
 
 </div>

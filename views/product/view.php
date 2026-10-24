@@ -30,8 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'releaseid',
-            'mediaid',
+            [
+                'label' => Yii::t('app', 'Release'),
+                'value' => $model->releases->title,
+            ],
+            [
+                'label' => Yii::t('app', 'Media'),
+                'value' => $model->productMedias->name,
+            ],
             'available_from_date',
             'stock',
         ],
