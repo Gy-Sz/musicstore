@@ -36,7 +36,9 @@
             echo \hail812\adminlte\widgets\Menu::widget([
                 'items' => [
 
-                    ['label' => 'Products', 'icon' => 'th', 'url' => ['product/index']],
+                    ['label' => 'Products', 'header'=>true],    
+                    ['label' => 'Products', 'icon' => 'box', 'url' => ['product/index']],
+                    ['label' => 'Prices', 'icon' => 'tag', 'url' => ['price/index']],
 
                     ['label' => 'Catalog', 'header'=>true],
                     ['label' => 'Artists', 'icon' => 'microphone', 'url' => ['artist/index']],
