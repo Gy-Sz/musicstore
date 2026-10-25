@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\Order $model */
+/** @var array $statusOptions */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
@@ -16,7 +17,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'customerid')->textInput() ?>
 
-    <?= $form->field($model, 'statusid')->textInput() ?>
+    <?= $form->field($model, 'statusid')->dropDownList($statusOptions) ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
