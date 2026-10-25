@@ -22,7 +22,14 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'productid')->textInput() ?>
 
-    <?= $form->field($model, 'priceid')->textInput() ?>
+    <?= $form->field($model, 'price_value')->textInput([
+        'placeholder' => Yii::t('app', 'Leave blank for catalog price'),
+    ]) ?>
+
+    <?= $form->field($model, 'price_currency')->textInput([
+        'maxlength' => true,
+        'placeholder' => Yii::t('app', 'Leave blank for catalog price'),
+    ]) ?>
 
     <?= $form->field($model, 'quantity')->textInput() ?>
 

@@ -10,17 +10,15 @@ use Yii;
  * @property int $id
  * @property int $orderid
  * @property int $productid
- * @property int $priceid
+ * @property float $price_value
+ * @property string $price_currency
  * @property int $quantity
  *
  * @property Order $orders
- * @property Price $prices
  * @property Product $products
  */
 class OrderItem extends \yii\db\ActiveRecord
 {
-
-
     /**
      * {@inheritdoc}
      */
@@ -36,10 +34,12 @@ class OrderItem extends \yii\db\ActiveRecord
     {
         return [
             [['quantity'], 'default', 'value' => 1],
-            [['orderid', 'productid', 'priceid'], 'required'],
-            [['orderid', 'productid', 'priceid', 'quantity'], 'integer'],
+            [['orderid', 'productid'], 'required'],
+            [['orderid', 'productid', 'quantity'], 'integer'],
+            [['price_value'], 'number'],
+            [['price_currency'], 'string', 'max' => 3],
+            [['price_value'], 'validatePriceSnapshot'],
             [['orderid'], 'exist', 'skipOnError' => true, 'targetClass' => Order::class, 'targetAttribute' => ['orderid' => 'id']],
-            [['priceid'], 'exist', 'skipOnError' => true, 'targetClass' => Price::class, 'targetAttribute' => ['priceid' => 'id']],
             [['productid'], 'exist', 'skipOnError' => true, 'targetClass' => Product::class, 'targetAttribute' => ['productid' => 'id']],
         ];
     }
@@ -53,9 +53,29 @@ class OrderItem extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'orderid' => Yii::t('app', 'Orderid'),
             'productid' => Yii::t('app', 'Productid'),
-            'priceid' => Yii::t('app', 'Priceid'),
+            'price_value' => Yii::t('app', 'Price'),
+            'price_currency' => Yii::t('app', 'Currency'),
             'quantity' => Yii::t('app', 'Quantity'),
         ];
+    }
+
+    public function validatePriceSnapshot(string $attribute): void
+    {
+        $priceValue = $this->getAttribute('price_value');
+        $priceCurrency = $this->getAttribute('price_currency');
+        $priceValueIsBlank = $priceValue === null || $priceValue === '';
+        $priceCurrencyIsBlank = $priceCurrency === null || $priceCurrency === '';
+
+        if ($priceValueIsBlank && $priceCurrencyIsBlank) {
+            return;
+        }
+
+        if ($priceValueIsBlank) {
+            $this->addError($attribute, Yii::t('app', 'Enter a price when a currency is provided.'));
+        }
+        if ($priceCurrencyIsBlank) {
+            $this->addError('price_currency', Yii::t('app', 'Enter a currency when a price is provided.'));
+        }
     }
 
     /**
@@ -66,16 +86,6 @@ class OrderItem extends \yii\db\ActiveRecord
     public function getOrders()
     {
         return $this->hasOne(Order::class, ['id' => 'orderid']);
-    }
-
-    /**
-     * Gets query for [[Prices]].
-     *
-     * @return \yii\db\ActiveQuery|PriceQuery
-     */
-    public function getPrices()
-    {
-        return $this->hasOne(Price::class, ['id' => 'priceid']);
     }
 
     /**
@@ -96,5 +106,4 @@ class OrderItem extends \yii\db\ActiveRecord
     {
         return new OrderItemQuery(get_called_class());
     }
-
 }

@@ -38,7 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'orderid',
             'productid',
-            'priceid',
+            'price_value',
+            'price_currency',
             'quantity',
             [
                 'class' => ActionColumn::className(),

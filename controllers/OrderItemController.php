@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Order;
 use app\models\OrderItem;
+use app\models\Price;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -94,7 +95,7 @@ class OrderItemController extends Controller
                 if ($order !== null) {
                     $model->orderid = $order->id;
                 }
-                if ($model->save()) {
+                if ($this->applyCatalogPriceWhenBlank($model) && $model->save()) {
                     return $this->redirect([
                         'view',
                         'id' => $model->id,
@@ -131,7 +132,7 @@ class OrderItemController extends Controller
             if ($order !== null) {
                 $model->orderid = $order->id;
             }
-            if ($model->save()) {
+            if ($this->applyCatalogPriceWhenBlank($model) && $model->save()) {
                 return $this->redirect([
                     'view',
                     'id' => $model->id,
@@ -188,5 +189,47 @@ class OrderItemController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    private function applyCatalogPriceWhenBlank(OrderItem $model): bool
+    {
+        $priceValue = $model->getAttribute('price_value');
+        $priceCurrency = $model->getAttribute('price_currency');
+        $priceValueIsBlank = $priceValue === null || $priceValue === '';
+        $priceCurrencyIsBlank = $priceCurrency === null || $priceCurrency === '';
+
+        if (
+            !$priceValueIsBlank
+            || !$priceCurrencyIsBlank
+        ) {
+            return true;
+        }
+
+        $order = Order::findOne(['id' => $model->orderid]);
+        if ($order === null) {
+            return true;
+        }
+
+        $orderDate = Yii::$app->formatter->asDate($order->datetime, 'php:Y-m-d');
+        $price = Price::find()
+            ->where(['productid' => $model->productid])
+            ->andWhere(['<=', 'startdate', $orderDate])
+            ->andWhere(['>=', 'enddate', $orderDate])
+            ->orderBy(['startdate' => SORT_DESC, 'id' => SORT_DESC])
+            ->one();
+
+        if ($price === null) {
+            $model->addError(
+                'price_value',
+                Yii::t('app', 'No catalog price applies on the order date. Enter a price and currency manually.')
+            );
+
+            return false;
+        }
+
+        $model->price_value = $price->value;
+        $model->price_currency = $price->currency;
+
+        return true;
     }
 }
