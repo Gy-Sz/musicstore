@@ -80,6 +80,7 @@ class OrderController extends Controller
             }
         } else {
             $model->loadDefaultValues();
+            $model->datetime=date('Y-m-d h:i:s');
         }
 
         return $this->render('create', [
