@@ -53,7 +53,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 'buttons' => [
                     'prices' => static function ($url): string {
-                        return Html::a(Yii::t('app', 'Prices'), $url, [
+                        $label = Yii::t('app', 'Manage prices for this product');
+
+                        return Html::a('<i class="fas fa-tag" aria-hidden="true"></i>', $url, [
+                            'aria-label' => $label,
                             'title' => Yii::t('app', 'Manage prices for this product'),
                         ]);
                     },
