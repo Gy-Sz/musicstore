@@ -97,8 +97,8 @@ class OrderItemController extends Controller
                 }
                 if ($this->applyCatalogPriceWhenBlank($model) && $model->save()) {
                     return $this->redirect([
-                        'view',
-                        'id' => $model->id,
+                        'index',
+                        //'id' => $model->id,
                         'orderId' => $order?->id,
                     ]);
                 }
