@@ -152,9 +152,12 @@ class ProductController extends Controller
     private function getReleaseOptions(): array
     {
         return ArrayHelper::map(
-            Release::find()->orderBy(['title' => SORT_ASC])->all(),
+            Release::find()
+                ->joinWith(['artists'])
+                ->orderBy(['artists.name' => SORT_ASC, 'releases.title' => SORT_ASC])
+                ->all(),
             'id',
-            'title'
+            static fn (Release $release): string => $release->artists->name . ' - ' . $release->title
         );
     }
 
