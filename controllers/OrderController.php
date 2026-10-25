@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Order;
 use app\models\OrderStatus;
+use app\models\Customer;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -86,6 +87,7 @@ class OrderController extends Controller
         return $this->render('create', [
             'model' => $model,
             'statusOptions' => $this->getStatusOptions(),
+            'customerOptions' => $this->getCustomerOptions(),
         ]);
     }
 
@@ -107,6 +109,7 @@ class OrderController extends Controller
         return $this->render('update', [
             'model' => $model,
             'statusOptions' => $this->getStatusOptions(),
+            'customerOptions' => $this->getCustomerOptions(),
         ]);
     }
 
@@ -151,5 +154,20 @@ class OrderController extends Controller
             ->select(['name'])
             ->indexBy('id')
             ->column();
+    }
+
+    /**
+     * Returns customer names and IDs keyed by customer ID.
+     *
+     * @return array
+     */
+    protected function getCustomerOptions(): array
+    {
+        $options = [];
+        foreach (Customer::find()->orderBy(['username' => SORT_ASC])->all() as $customer) {
+            $options[$customer->id] = sprintf('%s #%d', $customer->username, $customer->id);
+        }
+
+        return $options;
     }
 }
