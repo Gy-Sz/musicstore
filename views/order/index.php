@@ -59,11 +59,18 @@ CSS);
                                     <strong><?= Html::encode(Yii::t('app', 'Order date')) ?>:</strong>
                                     <?= Html::encode(Yii::$app->formatter->asDate($order->datetime)) ?>
                                 </p>
-                                <?= Html::a(
-                                    Yii::t('app', 'Edit'),
-                                    Url::to(['update', 'id' => $order->id]),
-                                    ['class' => 'btn btn-sm btn-outline-primary']
-                                ) ?>
+                                <div class="d-flex gap-2">
+                                    <?= Html::a(
+                                        Yii::t('app', 'View'),
+                                        Url::to(['view', 'id' => $order->id]),
+                                        ['class' => 'btn btn-sm btn-outline-secondary']
+                                    ) ?>
+                                    <?= Html::a(
+                                        Yii::t('app', 'Edit'),
+                                        Url::to(['update', 'id' => $order->id]),
+                                        ['class' => 'btn btn-sm btn-outline-primary']
+                                    ) ?>
+                                </div>
                             </div>
                         </article>
                     <?php endforeach; ?>
