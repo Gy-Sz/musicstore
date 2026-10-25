@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\models\Price;
+use app\models\Product;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -36,10 +38,11 @@ class PriceController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(?int $productId = null)
     {
+        $product = $productId === null ? null : $this->findProduct($productId);
         $dataProvider = new ActiveDataProvider([
-            'query' => Price::find(),
+            'query' => Price::find()->andFilterWhere(['productid' => $productId]),
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -54,6 +57,7 @@ class PriceController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'product' => $product,
         ]);
     }
 
@@ -63,10 +67,11 @@ class PriceController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($id, ?int $productId = null)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($id, $productId),
+            'productId' => $productId,
         ]);
     }
 
@@ -75,20 +80,35 @@ class PriceController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate(?int $productId = null)
     {
+        $product = $productId === null ? null : $this->findProduct($productId);
         $model = new Price();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                if ($product !== null) {
+                    $model->productid = $product->id;
+                }
+                if ($model->save()) {
+                    $route = ['view', 'id' => $model->id];
+                    if ($product !== null) {
+                        $route['productId'] = $product->id;
+                    }
+
+                    return $this->redirect($route);
+                }
             }
         } else {
             $model->loadDefaultValues();
+            if ($product !== null) {
+                $model->productid = $product->id;
+            }
         }
 
         return $this->render('create', [
             'model' => $model,
+            'product' => $product,
         ]);
     }
 
@@ -99,16 +119,28 @@ class PriceController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, ?int $productId = null)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $productId);
+        $product = $productId === null ? null : $this->findProduct($productId);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            if ($product !== null) {
+                $model->productid = $product->id;
+            }
+            if ($model->save()) {
+                $route = ['view', 'id' => $model->id];
+                if ($product !== null) {
+                    $route['productId'] = $product->id;
+                }
+
+                return $this->redirect($route);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'product' => $product,
         ]);
     }
 
@@ -119,11 +151,16 @@ class PriceController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($id, ?int $productId = null)
     {
-        $this->findModel($id)->delete();
+        $this->findModel($id, $productId)->delete();
 
-        return $this->redirect(['index']);
+        $route = ['index'];
+        if ($productId !== null) {
+            $route['productId'] = $productId;
+        }
+
+        return $this->redirect($route);
     }
 
     /**
@@ -133,10 +170,24 @@ class PriceController extends Controller
      * @return Price the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id, ?int $productId = null)
     {
-        if (($model = Price::findOne(['id' => $id])) !== null) {
+        $query = Price::find()->where(['id' => $id]);
+        if ($productId !== null) {
+            $query->andWhere(['productid' => $productId]);
+        }
+
+        if (($model = $query->one()) !== null) {
             return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    private function findProduct(int $id): Product
+    {
+        if (($product = Product::findOne(['id' => $id])) !== null) {
+            return $product;
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
