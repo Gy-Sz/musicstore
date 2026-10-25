@@ -4,12 +4,20 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Price $model */
+/** @var app\models\Product|null $product */
 
+$product = $product ?? null;
 $this->title = Yii::t('app', 'Update Price: {name}', [
     'name' => $model->id,
 ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Prices'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = $product === null
+    ? ['label' => Yii::t('app', 'Prices'), 'url' => ['index']]
+    : ['label' => Yii::t('app', 'Prices for Product #{id}', ['id' => $product->id]), 'url' => ['index', 'productId' => $product->id]];
+$viewRoute = ['view', 'id' => $model->id];
+if ($product !== null) {
+    $viewRoute['productId'] = $product->id;
+}
+$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => $viewRoute];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="price-update">
@@ -18,6 +26,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
     <?= $this->render('_form', [
         'model' => $model,
+        'product' => $product,
     ]) ?>
 
 </div>

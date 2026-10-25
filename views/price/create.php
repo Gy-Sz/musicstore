@@ -4,9 +4,13 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\Price $model */
+/** @var app\models\Product|null $product */
 
+$product = $product ?? null;
 $this->title = Yii::t('app', 'Create Price');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Prices'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $product === null
+    ? ['label' => Yii::t('app', 'Prices'), 'url' => ['index']]
+    : ['label' => Yii::t('app', 'Prices for Product #{id}', ['id' => $product->id]), 'url' => ['index', 'productId' => $product->id]];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="price-create">
@@ -15,6 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'product' => $product,
     ]) ?>
 
 </div>
