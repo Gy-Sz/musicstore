@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\OrderItem $model */
+/** @var app\models\Order|null $order */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
@@ -12,7 +13,12 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'orderid')->textInput() ?>
+    <?php if ($order === null): ?>
+        <?= $form->field($model, 'orderid')->textInput() ?>
+    <?php else: ?>
+        <p class="form-text"><?= Html::encode(Yii::t('app', 'Order ID: {id}', ['id' => $order->id])) ?></p>
+        <?= $form->field($model, 'orderid')->hiddenInput()->label(false) ?>
+    <?php endif; ?>
 
     <?= $form->field($model, 'productid')->textInput() ?>
 
