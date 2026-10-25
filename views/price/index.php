@@ -15,7 +15,10 @@ use yii\widgets\Pjax;
 $product = $product ?? null;
 $this->title = $product === null
     ? Yii::t('app', 'Prices')
-    : Yii::t('app', 'Prices for Product #{id}', ['id' => $product->id]);
+    : Yii::t('app', '{release}: {media}', [
+        'release' => $product->releases->artists->name . ' - ' . $product->releases->title,
+        'media' => $product->productMedias->name,
+    ]);
 if ($product !== null) {
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Products'), 'url' => ['/product/index']];
 }
@@ -27,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(
-            Yii::t('app', 'Create Price'),
+            $product === null ? Yii::t('app', 'Create Price') : Yii::t('app', 'Add Price'),
             $product === null ? ['create'] : ['create', 'productId' => $product->id],
             ['class' => 'btn btn-success']
         ) ?>
