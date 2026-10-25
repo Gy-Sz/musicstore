@@ -25,7 +25,7 @@ $this->registerJs("$('#order-date-picker').datetimepicker({format: 'YYYY-MM-DD H
 
     <?= $form->field($model, 'customerid')->textInput() ?>
 
-    <?= $form->field($model, 'statusid')->dropDownList($statusOptions) ?>
+    <?= $form->field($model, 'statusid', ['labelOptions' => ['label' => Yii::t('app', 'Status')]])->dropDownList($statusOptions) ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
