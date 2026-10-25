@@ -38,7 +38,7 @@
 
                     ['label' => 'Products', 'header'=>true],    
                     ['label' => 'Products', 'icon' => 'box', 'url' => ['product/index']],
-                    ['label' => 'Prices', 'icon' => 'tag', 'url' => ['price/index']],
+                    //['label' => 'Prices', 'icon' => 'tag', 'url' => ['price/index']],
 
                     ['label' => 'Catalog', 'header'=>true],
                     ['label' => 'Artists', 'icon' => 'microphone', 'url' => ['artist/index']],
