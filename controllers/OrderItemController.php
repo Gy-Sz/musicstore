@@ -36,10 +36,15 @@ class OrderItemController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(?int $orderId = null)
     {
+        $query = OrderItem::find();
+        if ($orderId !== null) {
+            $query->andWhere(['orderid' => $orderId]);
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => OrderItem::find(),
+            'query' => $query,
             /*
             'pagination' => [
                 'pageSize' => 50

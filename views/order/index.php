@@ -70,6 +70,11 @@ CSS);
                                         Url::to(['update', 'id' => $order->id]),
                                         ['class' => 'btn btn-sm btn-outline-primary']
                                     ) ?>
+                                    <?= Html::a(
+                                        Yii::t('app', 'Items'),
+                                        Url::to(['/order-item/index', 'orderId' => $order->id]),
+                                        ['class' => 'btn btn-sm btn-outline-info']
+                                    ) ?>
                                 </div>
                             </div>
                         </article>
