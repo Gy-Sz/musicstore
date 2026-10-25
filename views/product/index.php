@@ -58,6 +58,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         return Html::a('<i class="fas fa-tag" aria-hidden="true"></i>', $url, [
                             'aria-label' => $label,
                             'title' => Yii::t('app', 'Manage prices for this product'),
+                            //'target' => '_blank',
+                            //'rel' => 'noopener noreferrer',
+                            'data-pjax' => '0',
                         ]);
                     },
                 ],
