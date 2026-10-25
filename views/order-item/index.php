@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(
-            Yii::t('app', 'Create Order Item'),
+            Yii::t('app', 'Add Item'),
             $order === null ? ['create'] : ['create', 'orderId' => $order->id],
             ['class' => 'btn btn-success']
         ) ?>
