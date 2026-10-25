@@ -37,7 +37,9 @@
                 'items' => [
 
                     //['label' => 'Products', 'header'=>true],    
-                    ['label' => 'Products', 'icon' => 'box', 'url' => ['product/index']],
+                    ['label' => 'Products', 'icon' => 'cube', 'url' => ['product/index']],
+                    ['label' => 'Orders', 'icon' => 'box', 'url' => ['order/index']],
+                    
                     //['label' => 'Prices', 'icon' => 'tag', 'url' => ['price/index']],
 
                     ['label' => 'Catalog', 'header'=>true],
