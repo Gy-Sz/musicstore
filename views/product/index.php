@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
@@ -42,9 +43,21 @@ $this->params['breadcrumbs'][] = $this->title;
             'stock',
             [
                 'class' => ActionColumn::className(),
+                'template' => '{view} {update} {delete} {prices}',
                 'urlCreator' => function ($action, Product $model, $key, $index, $column) {
+                    if ($action === 'prices') {
+                        return Url::toRoute(['/price/index', 'productId' => $model->id]);
+                    }
+
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                },
+                'buttons' => [
+                    'prices' => static function ($url): string {
+                        return Html::a(Yii::t('app', 'Prices'), $url, [
+                            'title' => Yii::t('app', 'Manage prices for this product'),
+                        ]);
+                    },
+                ],
             ],
         ],
     ]); ?>
