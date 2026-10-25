@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /** @var app\models\Price $model */
 /** @var int|null $productId */
 
-$this->title = $model->id;
+//$this->title = $model->id;
 $this->params['breadcrumbs'][] = $productId === null
     ? ['label' => Yii::t('app', 'Prices'), 'url' => ['index']]
     : ['label' => Yii::t('app', 'Prices for Product #{id}', ['id' => $productId]), 'url' => ['index', 'productId' => $productId]];
