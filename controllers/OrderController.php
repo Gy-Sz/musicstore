@@ -84,6 +84,7 @@ class OrderController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'statusOptions' => $this->getStatusOptions(),
         ]);
     }
 
@@ -104,6 +105,7 @@ class OrderController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'statusOptions' => $this->getStatusOptions(),
         ]);
     }
 
@@ -135,5 +137,18 @@ class OrderController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    /**
+     * Returns order status names keyed by their IDs.
+     *
+     * @return array
+     */
+    protected function getStatusOptions(): array
+    {
+        return OrderStatus::find()
+            ->select(['name'])
+            ->indexBy('id')
+            ->column();
     }
 }
