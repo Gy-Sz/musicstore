@@ -2,7 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\Order;
 use app\models\OrderItem;
+use app\models\Price;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -36,10 +39,13 @@ class OrderItemController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(?int $orderId = null)
     {
+        $order = $orderId === null ? null : $this->findOrder($orderId);
+        $query = OrderItem::find()->andFilterWhere(['orderid' => $orderId]);
+
         $dataProvider = new ActiveDataProvider([
-            'query' => OrderItem::find(),
+            'query' => $query,
             /*
             'pagination' => [
                 'pageSize' => 50
@@ -54,6 +60,7 @@ class OrderItemController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'order' => $order,
         ]);
     }
 
@@ -63,10 +70,13 @@ class OrderItemController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($id, ?int $orderId = null)
     {
+        $model = $this->findModel($id, $orderId);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'order' => $orderId === null ? null : $this->findOrder($orderId),
         ]);
     }
 
@@ -75,20 +85,34 @@ class OrderItemController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate(?int $orderId = null)
     {
+        $order = $orderId === null ? null : $this->findOrder($orderId);
         $model = new OrderItem();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                if ($order !== null) {
+                    $model->orderid = $order->id;
+                }
+                if ($this->applyCatalogPriceWhenBlank($model) && $model->save()) {
+                    return $this->redirect([
+                        'index',
+                        //'id' => $model->id,
+                        'orderId' => $order?->id,
+                    ]);
+                }
             }
         } else {
             $model->loadDefaultValues();
+            if ($order !== null) {
+                $model->orderid = $order->id;
+            }
         }
 
         return $this->render('create', [
             'model' => $model,
+            'order' => $order,
         ]);
     }
 
@@ -99,16 +123,27 @@ class OrderItemController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate($id, ?int $orderId = null)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id, $orderId);
+        $order = $orderId === null ? null : $this->findOrder($orderId);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            if ($order !== null) {
+                $model->orderid = $order->id;
+            }
+            if ($this->applyCatalogPriceWhenBlank($model) && $model->save()) {
+                return $this->redirect([
+                    'view',
+                    'id' => $model->id,
+                    'orderId' => $order?->id,
+                ]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'order' => $order,
         ]);
     }
 
@@ -119,11 +154,11 @@ class OrderItemController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete($id, ?int $orderId = null)
     {
-        $this->findModel($id)->delete();
+        $this->findModel($id, $orderId)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'orderId' => $orderId]);
     }
 
     /**
@@ -133,12 +168,68 @@ class OrderItemController extends Controller
      * @return OrderItem the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id, ?int $orderId = null)
     {
-        if (($model = OrderItem::findOne(['id' => $id])) !== null) {
+        $query = OrderItem::find()->where(['id' => $id]);
+        if ($orderId !== null) {
+            $query->andWhere(['orderid' => $orderId]);
+        }
+
+        if (($model = $query->one()) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    private function findOrder(int $id): Order
+    {
+        if (($order = Order::findOne(['id' => $id])) !== null) {
+            return $order;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    private function applyCatalogPriceWhenBlank(OrderItem $model): bool
+    {
+        $priceValue = $model->getAttribute('price_value');
+        $priceCurrency = $model->getAttribute('price_currency');
+        $priceValueIsBlank = $priceValue === null || $priceValue === '';
+        $priceCurrencyIsBlank = $priceCurrency === null || $priceCurrency === '';
+
+        if (
+            !$priceValueIsBlank
+            || !$priceCurrencyIsBlank
+        ) {
+            return true;
+        }
+
+        $order = Order::findOne(['id' => $model->orderid]);
+        if ($order === null) {
+            return true;
+        }
+
+        $orderDate = Yii::$app->formatter->asDate($order->datetime, 'php:Y-m-d');
+        $price = Price::find()
+            ->where(['productid' => $model->productid])
+            ->andWhere(['<=', 'startdate', $orderDate])
+            ->andWhere(['>=', 'enddate', $orderDate])
+            ->orderBy(['startdate' => SORT_DESC, 'id' => SORT_DESC])
+            ->one();
+
+        if ($price === null) {
+            $model->addError(
+                'price_value',
+                Yii::t('app', 'No catalog price applies on the order date. Enter a price and currency manually.')
+            );
+
+            return false;
+        }
+
+        $model->price_value = $price->value;
+        $model->price_currency = $price->currency;
+
+        return true;
     }
 }

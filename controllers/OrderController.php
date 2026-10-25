@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\models\Order;
+use app\models\OrderStatus;
+use app\models\Customer;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -39,21 +41,15 @@ class OrderController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Order::find(),
-            /*
+            'query' => Order::find()->with(['customers', 'orderStatuses']),
             'pagination' => [
-                'pageSize' => 50
+                'pageSize' => false,
             ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'statuses' => OrderStatus::find()->all(),
         ]);
     }
 
@@ -81,14 +77,17 @@ class OrderController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index']);
             }
         } else {
             $model->loadDefaultValues();
+            $model->datetime=date('Y-m-d H:i:s');
         }
 
         return $this->render('create', [
             'model' => $model,
+            'statusOptions' => $this->getStatusOptions(),
+            'customerOptions' => $this->getCustomerOptions(),
         ]);
     }
 
@@ -104,11 +103,13 @@ class OrderController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'statusOptions' => $this->getStatusOptions(),
+            'customerOptions' => $this->getCustomerOptions(),
         ]);
     }
 
@@ -140,5 +141,33 @@ class OrderController extends Controller
         }
 
         throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    /**
+     * Returns order status names keyed by their IDs.
+     *
+     * @return array
+     */
+    protected function getStatusOptions(): array
+    {
+        return OrderStatus::find()
+            ->select(['name'])
+            ->indexBy('id')
+            ->column();
+    }
+
+    /**
+     * Returns customer names and IDs keyed by customer ID.
+     *
+     * @return array
+     */
+    protected function getCustomerOptions(): array
+    {
+        $options = [];
+        foreach (Customer::find()->orderBy(['username' => SORT_ASC])->all() as $customer) {
+            $options[$customer->id] = sprintf('%s #%d', $customer->username, $customer->id);
+        }
+
+        return $options;
     }
 }

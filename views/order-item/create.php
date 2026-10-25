@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\OrderItem $model */
+/** @var app\models\Order|null $order */
 
 $this->title = Yii::t('app', 'Create Order Item');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Order Items'), 'url' => ['index']];
@@ -15,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'order' => $order,
     ]) ?>
 
 </div>

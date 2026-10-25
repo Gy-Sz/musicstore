@@ -14,13 +14,10 @@ use Yii;
  * @property string $startdate
  * @property string $enddate
  *
- * @property OrderItem[] $orderItems
  * @property Product $products
  */
 class Price extends \yii\db\ActiveRecord
 {
-
-
     /**
      * {@inheritdoc}
      */
@@ -61,16 +58,6 @@ class Price extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[OrderItems]].
-     *
-     * @return \yii\db\ActiveQuery|OrderItemQuery
-     */
-    public function getOrderItems()
-    {
-        return $this->hasMany(OrderItem::class, ['priceid' => 'id']);
-    }
-
-    /**
      * Gets query for [[Products]].
      *
      * @return \yii\db\ActiveQuery|ProductQuery
@@ -88,5 +75,4 @@ class Price extends \yii\db\ActiveRecord
     {
         return new PriceQuery(get_called_class());
     }
-
 }

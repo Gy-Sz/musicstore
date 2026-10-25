@@ -4,6 +4,7 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\OrderItem $model */
+/** @var app\models\Order|null $order */
 
 $this->title = Yii::t('app', 'Update Order Item: {name}', [
     'name' => $model->id,
@@ -18,6 +19,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
     <?= $this->render('_form', [
         'model' => $model,
+        'order' => $order,
     ]) ?>
 
 </div>
