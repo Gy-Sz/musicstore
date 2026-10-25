@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
@@ -27,16 +28,42 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'releaseid',
-            'mediaid',
+            //'id',
+            [
+                'attribute' => 'releaseid',
+                'label' => Yii::t('app', 'Release'),
+                'value' => static fn (Product $model) => $model->releases->title,
+            ],
+            [
+                'attribute' => 'mediaid',
+                'label' => Yii::t('app', 'Media'),
+                'value' => static fn (Product $model) => $model->productMedias->name,
+            ],
             'available_from_date',
             'stock',
             [
                 'class' => ActionColumn::className(),
+                'template' => '{view} {update} {delete} {prices}',
                 'urlCreator' => function ($action, Product $model, $key, $index, $column) {
+                    if ($action === 'prices') {
+                        return Url::toRoute(['/price/index', 'productId' => $model->id]);
+                    }
+
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                },
+                'buttons' => [
+                    'prices' => static function ($url): string {
+                        $label = Yii::t('app', 'Manage prices for this product');
+
+                        return Html::a('<i class="fas fa-tag" aria-hidden="true"></i>', $url, [
+                            'aria-label' => $label,
+                            'title' => Yii::t('app', 'Manage prices for this product'),
+                            //'target' => '_blank',
+                            //'rel' => 'noopener noreferrer',
+                            'data-pjax' => '0',
+                        ]);
+                    },
+                ],
             ],
         ],
     ]); ?>

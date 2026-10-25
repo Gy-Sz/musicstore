@@ -1,12 +1,13 @@
 <?php
 
+use app\models\Product;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
 /** @var app\models\Product $model */
 
-$this->title = $model->id;
+$this->title = $model->releases->title;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Products'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -30,8 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'releaseid',
-            'mediaid',
+            [
+                'label' => Yii::t('app', 'Release'),
+                'value' => static fn (Product $model): string => $model->releases->artists->name . ' - ' . $model->releases->title,
+            ],
+            [
+                'label' => Yii::t('app', 'Media'),
+                'value' => $model->productMedias->name,
+            ],
             'available_from_date',
             'stock',
         ],
