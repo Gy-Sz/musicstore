@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Product;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -32,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             [
                 'label' => Yii::t('app', 'Release'),
-                'value' => $model->releases->title,
+                'value' => static fn (Product $model): string => $model->releases->artists->name . ' - ' . $model->releases->title,
             ],
             [
                 'label' => Yii::t('app', 'Media'),
