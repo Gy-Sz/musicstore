@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace app\tests\Unit;
 
+use app\controllers\SiteController;
 use Yii;
-use yii\helpers\Html;
+use yii\base\Security;
+use yii\web\Response;
+use yii\helpers\Url;
 
 final class HomePageTest extends \Codeception\Test\Unit
 {
-    public function testRenderCreateOrderAndCreateReleaseShortcutsOnly(): void
+    public function testHomepageRedirectsToOrderIndex(): void
     {
-        $html = Yii::$app->view->renderFile(Yii::getAlias('@app/views/site/index.php'), []);
+        $controller = new SiteController(
+            'site',
+            Yii::$app,
+            Yii::$app->mailer,
+            new Security(),
+        );
 
-        self::assertStringContainsString(
-            Html::a(Yii::t('app', 'Create Order'), ['/order/create'], ['class' => 'btn btn-success btn-lg']),
-            $html,
-        );
-        self::assertStringContainsString(
-            Html::a(Yii::t('app', 'Create Release'), ['/release/create'], ['class' => 'btn btn-success btn-lg']),
-            $html,
-        );
-        self::assertSame(2, substr_count($html, '<a '));
-        self::assertStringNotContainsString('Build with Yii Framework', $html);
-        self::assertStringNotContainsString('API Reference', $html);
-        self::assertStringNotContainsString('yii2-debug', $html);
+        $response = $controller->actionIndex();
+
+        self::assertInstanceOf(Response::class, $response);
+        self::assertSame(Url::to(['/order/index'], true), $response->getHeaders()->get('Location'));
     }
 }
