@@ -23,7 +23,8 @@ final class LoginFormCest
     {
         $I->amLoggedInAs(100);
         $I->amOnPage('/');
-        $I->see('Logout (admin)');
+        $I->see('admin', '.navbar-username');
+        $I->see('Logout');
     }
 
     // demonstrates `amLoggedInAs` method
@@ -31,7 +32,8 @@ final class LoginFormCest
     {
         $I->amLoggedInAs(\app\models\User::findByUsername('admin'));
         $I->amOnPage('/');
-        $I->see('Logout (admin)');
+        $I->see('admin', '.navbar-username');
+        $I->see('Logout');
     }
 
     public function loginWithEmptyCredentials(FunctionalTester $I)
@@ -58,7 +60,8 @@ final class LoginFormCest
             'LoginForm[username]' => 'admin',
             'LoginForm[password]' => 'admin',
         ]);
-        $I->see('Logout (admin)');
+        $I->see('admin', '.navbar-username');
+        $I->see('Logout');
         $I->dontSeeElement('form#login-form');
     }
 }
