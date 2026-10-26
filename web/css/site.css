@@ -160,6 +160,10 @@ a.desc:after {
     max-width: 960px;
 }
 
+.login-form-card {
+    max-width: 480px;
+}
+
 .login-brand-title {
     font-size: 1.75rem;
     line-height: 1.3;
