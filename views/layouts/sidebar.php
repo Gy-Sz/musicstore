@@ -43,8 +43,8 @@
                     ['label' => 'Order Statuses', 'icon' => 'th', 'url' => ['order-status/index']],
                     
                     
-                    ['label'=>'DevTools', 'header'=>true],
-                    ['label'=>'gii', 'icon'=>'file-code', 'url'=>['/gii'], 'target'=>'_blank'],
+                    //['label'=>'DevTools', 'header'=>true],
+                    //['label'=>'gii', 'icon'=>'file-code', 'url'=>['/gii'], 'target'=>'_blank'],
                     //['label'=>'Swagger', 'icon'=>'file-code', 'url'=>['/swagger']],
                 ],
             ]);
