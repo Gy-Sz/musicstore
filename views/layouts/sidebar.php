@@ -54,7 +54,7 @@
                     
                     ['label'=>'DevTools', 'header'=>true],
                     ['label'=>'gii', 'icon'=>'file-code', 'url'=>['/gii'], 'target'=>'_blank'],
-                    ['label'=>'Swagger', 'icon'=>'file-code', 'url'=>['/swagger']],
+                    //['label'=>'Swagger', 'icon'=>'file-code', 'url'=>['/swagger']],
                 ],
             ]);
             ?>
