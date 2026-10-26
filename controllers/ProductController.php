@@ -3,9 +3,9 @@
 namespace app\controllers;
 
 use app\models\Product;
+use app\models\ProductSearch;
 use app\models\Release;
 use app\models\ProductMedia;
-use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -51,21 +51,11 @@ class ProductController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Product::find()->with(['releases', 'productMedias']),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $searchModel = new ProductSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }

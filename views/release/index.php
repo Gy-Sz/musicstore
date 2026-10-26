@@ -9,6 +9,7 @@ use yii\widgets\Pjax;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
+/** @var app\models\ReleaseSearch $searchModel */
 
 $this->title = Yii::t('app', 'Releases');
 $this->params['breadcrumbs'][] = $this->title;
@@ -25,19 +26,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             //'id',
             'title',
             [
-                'attribute' => 'artistid',
+                'attribute' => 'artistName',
                 'label' => Yii::t('app', 'Artist'),
                 'value' => static fn (Release $model) => $model->artists->name,
             ],
             'date',
             [
-                'attribute' => 'typeid',
+                'attribute' => 'releaseTypeName',
                 'label' => Yii::t('app', 'Type'),
                 'value' => static fn (Release $model) => $model->releaseTypes->name,
             ],
