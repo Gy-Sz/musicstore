@@ -78,7 +78,7 @@ class OrderController extends Controller
 
     /**
      * Creates a new Order model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * If creation is successful, the browser will be redirected to the order's order-item index.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
@@ -87,7 +87,7 @@ class OrderController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['index']);
+                return $this->redirect(['/order-item/index', 'orderId' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
