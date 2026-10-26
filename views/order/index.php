@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\grid\ActionColumn;
 
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
@@ -9,6 +10,8 @@ use yii\helpers\Url;
 
 $this->title = Yii::t('app', 'Orders');
 $this->params['breadcrumbs'][] = $this->title;
+
+$actionIcons = (new ActionColumn())->icons;
 
 $ordersByStatus = [];
 foreach ($dataProvider->getModels() as $order) {
@@ -61,19 +64,31 @@ CSS);
                                 </p>
                                 <div class="d-flex gap-2">
                                     <?= Html::a(
-                                        Yii::t('app', 'View'),
+                                        $actionIcons['eye-open'],
                                         Url::to(['view', 'id' => $order->id]),
-                                        ['class' => 'btn btn-sm btn-outline-secondary']
+                                        [
+                                            'class' => 'btn btn-sm btn-outline-secondary',
+                                            'title' => Yii::t('app', 'View'),
+                                            'aria-label' => Yii::t('app', 'View'),
+                                        ]
                                     ) ?>
                                     <?= Html::a(
-                                        Yii::t('app', 'Edit'),
+                                        $actionIcons['pencil'],
                                         Url::to(['update', 'id' => $order->id]),
-                                        ['class' => 'btn btn-sm btn-outline-primary']
+                                        [
+                                            'class' => 'btn btn-sm btn-outline-primary',
+                                            'title' => Yii::t('app', 'Edit'),
+                                            'aria-label' => Yii::t('app', 'Edit'),
+                                        ]
                                     ) ?>
                                     <?= Html::a(
-                                        Yii::t('app', 'Items'),
+                                        '<i class="fas fa-list" aria-hidden="true"></i>',
                                         Url::to(['/order-item/index', 'orderId' => $order->id]),
-                                        ['class' => 'btn btn-sm btn-outline-info']
+                                        [
+                                            'class' => 'btn btn-sm btn-outline-info',
+                                            'title' => Yii::t('app', 'Items'),
+                                            'aria-label' => Yii::t('app', 'Items'),
+                                        ]
                                     ) ?>
                                 </div>
                             </div>
