@@ -36,10 +36,18 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['login'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -96,7 +104,7 @@ class SiteController extends Controller
             // Ellenőrizd RBAC role-t
             $user = Yii::$app->user->identity;
             $roles = $user->getRoles();
-            
+
             return $this->goHome();
         }
         $model->password = '';

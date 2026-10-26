@@ -8,6 +8,23 @@ use app\tests\Support\FunctionalTester;
 
 final class ManagementAccessCest
 {
+    public function guestsAreRedirectedFromSitePages(FunctionalTester $I): void
+    {
+        $routes = [
+            'site/index',
+            'site/about',
+            'site/contact',
+            'site/logout',
+            'site/captcha',
+            'site/error',
+        ];
+
+        foreach ($routes as $route) {
+            $I->amOnRoute($route);
+            $I->see('Login', 'h1');
+        }
+    }
+
     public function guestsAreRedirectedFromManagementTools(FunctionalTester $I): void
     {
         $routes = [
