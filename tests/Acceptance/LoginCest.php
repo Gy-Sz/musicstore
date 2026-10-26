@@ -13,6 +13,9 @@ final class LoginCest
     {
         $I->amOnPage(Url::toRoute('/site/login'));
         $I->see('Login', 'h1');
+        $I->see('Enter your credentials to continue');
+        $I->dontSee('MusicStore');
+        $I->dontSee('Yii');
 
         $I->amGoingTo('try to login with correct credentials');
         $I->fillField('input[name="LoginForm[username]"]', 'admin');
